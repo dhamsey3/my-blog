@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"  
+  region = "us-east-1"
 }
 
 # EC2 instance for backend server
@@ -9,18 +9,10 @@ resource "aws_instance" "backend_server" {
   key_name               = "your-keypair-name"  # Update with your SSH keypair name
 
   # Security group configuration (open ports 22 for SSH and 80 for HTTP)
-  security_groups        = ["backend_server_sg"]
+  security_groups        = [aws_security_group.backend_server_sg.name]
 
-  # User data script to install dependencies and start server
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update
-              apt-get install -y nodejs npm
-              git clone https://github.com/your/backend-repo.git /home/ubuntu/backend
-              cd /home/ubuntu/backend
-              npm install
-              npm start > app.log &
-              EOF
+  # User data script to execute app_setup.sh
+  user_data = templatefile("${path.module}/scripts/app_setup.sh", {})
 
   tags = {
     Name = "BackendServer"
@@ -62,4 +54,3 @@ resource "aws_security_group" "backend_server_sg" {
 output "backend_server_public_ip" {
   value = aws_instance.backend_server.public_ip
 }
-
