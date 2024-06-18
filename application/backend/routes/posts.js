@@ -1,35 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const Post = require("../models/Post");
+// application/backend/routes/posts.js
 
-// Retrieve all posts
-router.get("/", (req, res) => {
-  Post.find({}, (err, posts) => {
-    if (err) {
-      console.error("Error fetching posts:", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      res.json(posts);
-    }
-  });
+const express = require('express');
+const router = express.Router();
+const Post = require('../models/Post');
+
+// Route to fetch all posts
+router.get('/', (req, res) => {
+  Post.find()
+    .then(posts => res.json(posts))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
-// Create a new post
-router.post("/", (req, res) => {
+// Route to create a new post
+router.post('/', (req, res) => {
   const { title, content } = req.body;
-
-  const newPost = new Post({
-    title,
-    content
-  });
+  const newPost = new Post({ title, content });
 
   newPost.save()
-    .then(post => res.json(post))
-    .catch(err => {
-      console.error("Error saving post:", err);
-      res.status(500).send("Internal Server Error");
-    });
+    .then(() => res.json('Post added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
-
