@@ -1,3 +1,4 @@
+/* Reset default browser styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -5,6 +6,7 @@ body {
   background-color: #f0f0f0;
 }
 
+/* Header styles */
 header {
   background-color: #333;
   color: white;
@@ -12,10 +14,12 @@ header {
   padding: 10px 0;
 }
 
+/* Main content styles */
 main {
   padding: 20px;
 }
 
+/* Footer styles */
 footer {
   background-color: #333;
   color: white;
@@ -26,14 +30,13 @@ footer {
   width: 100%;
 }
 
-/* style.css */
-
 /* Ensure images are responsive */
 img {
   max-width: 100%;
   height: auto;
 }
 
+/* Additional styling for specific elements */
 header img {
   max-width: 200px; /* Example size for logo */
 }
