@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const path = require("path");
 const postsRoute = require("./routes/posts");
 
 const app = express();
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("application/frontend")); // Serve frontend files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded images
 
 // Multer setup for file uploads
 const storage = multer.diskStorage({
@@ -51,7 +53,7 @@ app.get("/compose", (req, res) => {
 // API endpoint for creating new posts
 app.post("/api/posts", upload.single('image'), (req, res) => {
   const { title, content } = req.body;
-  const imagePath = req.file ? req.file.path : null;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   const newPost = new Post({
     title: title,
