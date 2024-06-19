@@ -1,47 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
   const postsContainer = document.getElementById('posts');
-  const postForm = document.getElementById('postForm');
 
-  // Fetch all posts and display them
-  fetch('http://backend-server-public-ip/api/posts')
+  // Fetch posts from backend API
+  fetch('/api/posts')
     .then(response => response.json())
     .then(posts => {
       posts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.classList.add('post');
         postElement.innerHTML = `
-          <h3>${post.title}</h3>
+          <h2>${post.title}</h2>
           <p>${post.content}</p>
+          ${post.image ? `<img src="${post.image}" alt="Post image" class="img-fluid">` : ''}
         `;
         postsContainer.appendChild(postElement);
       });
     })
     .catch(error => console.error('Error fetching posts:', error));
 
-  // Handle form submission
-  postForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const postTitle = document.getElementById('postTitle').value;
-    const postContent = document.getElementById('postContent').value;
+  // Handle form submission for new posts
+  const form = document.getElementById('compose-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
 
-    fetch('http://backend-server-public-ip/api/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title: postTitle, content: postContent }),
-    })
-    .then(response => response.json())
-    .then(newPost => {
-      const postElement = document.createElement('div');
-      postElement.classList.add('post');
-      postElement.innerHTML = `
-        <h3>${newPost.title}</h3>
-        <p>${newPost.content}</p>
-      `;
-      postsContainer.appendChild(postElement);
-      postForm.reset(); // Clear form inputs after successful submission
-    })
-    .catch(error => console.error('Error creating post:', error));
-  });
+      fetch('/api/posts', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Post created:', data);
+        location.reload(); // Reload page to see the new post
+      })
+      .catch(error => console.error('Error creating post:', error));
+    });
+  }
 });
