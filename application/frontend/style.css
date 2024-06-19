@@ -26,3 +26,14 @@ footer {
   width: 100%;
 }
 
+/* style.css */
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+header img {
+  max-width: 200px; /* Example size for logo */
+}
