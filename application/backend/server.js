@@ -47,7 +47,7 @@ app.get("/contact", (req, res) => {
 
 // Serve compose.html for creating new posts
 app.get("/compose", (req, res) => {
-  res.sendFile(__dirname + "/application/frontend/compose.html");
+  res.sendFile(__dirname + "/application/frontend/index.html");
 });
 
 // API endpoint for creating new posts
