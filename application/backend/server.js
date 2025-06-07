@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const postsRoute = require("./routes/posts");
+const Post = require("./models/post");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
