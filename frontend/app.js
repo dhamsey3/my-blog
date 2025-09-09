@@ -1,5 +1,7 @@
+const API_BASE_URL = window.API_BASE_URL || window.location.origin;
+
 async function fetchList(path) {
-  const res = await fetch(`http://localhost:3000/api/${path}`);
+  const res = await fetch(`${API_BASE_URL}/api/${path}`);
   return res.json();
 }
 
