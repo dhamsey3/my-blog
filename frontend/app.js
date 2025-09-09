@@ -1,18 +1,3 @@
-async function fetchList(path, retries = 1) {
-  try {
-    const res = await fetch(`http://localhost:3000/api/${path}`);
-    if (!res.ok) {
-      throw new Error(`Request failed with status ${res.status}`);
-    }
-    return await res.json();
-  } catch (err) {
-    if (retries > 0) {
-      return fetchList(path, retries - 1);
-    }
-    throw err;
-  }
-}
-
 async function render() {
   const appendList = (id, items, formatter) => {
     const ul = document.getElementById(id);
