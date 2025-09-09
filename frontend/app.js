@@ -35,4 +35,8 @@ async function render() {
   );
 }
 
-render();
+if (typeof window !== 'undefined') {
+  render();
+} else {
+  module.exports = { render };
+}
