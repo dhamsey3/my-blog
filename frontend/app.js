@@ -1,18 +1,4 @@
-const API_BASE_URL = window.API_BASE_URL || window.location.origin;
-
-async function fetchList(path) {
-  const res = await fetch(`${API_BASE_URL}/api/${path}`);
-  return res.json();
-}
-
 async function render() {
-  const [games, predictions, challenges, leaderboard] = await Promise.all([
-    fetchList('games'),
-    fetchList('predictions'),
-    fetchList('challenges'),
-    fetchList('leaderboard')
-  ]);
-
   const appendList = (id, items, formatter) => {
     const ul = document.getElementById(id);
     items.forEach(item => {
@@ -22,10 +8,31 @@ async function render() {
     });
   };
 
-  appendList('games', games, g => g.name);
-  appendList('predictions', predictions, p => p.question);
-  appendList('challenges', challenges, c => `${c.name} – ${c.reward}`);
-  appendList('leaderboard', leaderboard, u => `${u.user}: ${u.points}`);
+  const displayError = (id, message) => {
+    const ul = document.getElementById(id);
+    const li = document.createElement('li');
+    li.textContent = message;
+    ul.appendChild(li);
+  };
+
+  const sections = [
+    { id: 'games', path: 'games', formatter: g => g.name, error: 'Failed to load games.' },
+    { id: 'predictions', path: 'predictions', formatter: p => p.question, error: 'Failed to load predictions.' },
+    { id: 'challenges', path: 'challenges', formatter: c => `${c.name} – ${c.reward}`, error: 'Failed to load challenges.' },
+    { id: 'leaderboard', path: 'leaderboard', formatter: u => `${u.user}: ${u.points}`, error: 'Failed to load leaderboard.' }
+  ];
+
+  await Promise.all(
+    sections.map(async ({ id, path, formatter, error }) => {
+      try {
+        const items = await fetchList(path, 1);
+        appendList(id, items, formatter);
+      } catch (err) {
+        console.error(error, err);
+        displayError(id, error);
+      }
+    })
+  );
 }
 
 render();
